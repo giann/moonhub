@@ -14,7 +14,25 @@
             cursor: pointer;
             text-decoration: underline;
         }
+
+        .commits {
+            border-collapse: separate;
+            border-spacing: 10px 0;
+        }
     </style>
+
+    <script type="text/lustache" id="commits-template">
+        <table class="commits">
+            <% for i, commit in ipairs(commits) do %>
+            <tr data-sha="<%= commit.commit.tree.sha %>">
+                <td class="hash"><%= string.sub(commit.commit.tree.sha, 1, 7) %></td>
+                <td class="date"><%= commit.commit.committer.date %></td>
+                <td class="message"><%= string.sub(commit.commit.message, 1, 80) %></td>
+                <td class="author"><%= commit.commit.committer.name %></td>
+            </tr>
+            <% end %>
+        </table>
+    </script>
 
     <div id="app">
     </div>
