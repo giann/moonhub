@@ -1,0 +1,1 @@
+package.path="lua_modules/share/lua/5.3/?.lua;lua_modules/share/lua/5.3/?/init.lua"local a=require("moonview")local b=require("moonview.helpers")local c=require("hump.signal")local d=b.q;local e=b.qall;local f=a.View;local g=a.Model;local h=a.Collection

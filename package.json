@@ -1,0 +1,26 @@
+{
+  "name": "moonhub",
+  "version": "1.0.0",
+  "description": "Github repo browser writtent with Moonview and Fengari",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/giann/moonhub.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/giann/moonhub/issues"
+  },
+  "homepage": "https://github.com/giann/moonhub#readme",
+  "devDependencies": {
+    "babili-webpack-plugin": "^0.1.2",
+    "luamin": "^1.0.4",
+    "moonview": "github:giann/moonview",
+    "webpack": "^3.4.1",
+    "webpack-shell-plugin": "^0.5.0"
+  }
+}
