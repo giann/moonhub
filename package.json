@@ -19,8 +19,13 @@
   "devDependencies": {
     "babili-webpack-plugin": "^0.1.2",
     "luamin": "^1.0.4",
-    "moonview": "github:giann/moonview",
     "webpack": "^3.4.1",
     "webpack-shell-plugin": "^0.5.0"
+  },
+  "dependencies": {
+    "markdown": "^0.5.0",
+    "moonview": "github:giann/moonview",
+    "fengari": "github:fengari-lua/fengari",
+    "fengari-interop": "github:fengari-lua/fengari-interop"
   }
 }

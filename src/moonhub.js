@@ -3,11 +3,12 @@
 
 window.WEB = true;
 
-const fengari  = require('fengari');
+const fengari  = require("fengari");
 const lua      = fengari.lua;
 const lauxlib  = fengari.lauxlib;
 const lualib   = fengari.lualib;
-const interop  = require('fengari-interop');
+const interop  = require("fengari-interop");
+window.md      = require("markdown").markdown;
 
 const L = lauxlib.luaL_newstate();
 

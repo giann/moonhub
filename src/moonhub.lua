@@ -6,6 +6,7 @@ local Signal   = require("hump.signal")
 local q        = helpers.q
 local qall     = helpers.qall
 local fetchj   = helpers.fetchj
+local fetch    = helpers.fetch
 
 local View       = moonview.View
 local Model      = moonview.Model
@@ -57,6 +58,19 @@ coroutine.wrap(function()
                         .. ghToken
                     )
                 )
+
+
+                local readme = fetchj(
+                    ghEndpoint
+                        .. "/repos/"
+                        .. projectSelectorView.model.user
+                        .. "/"
+                        .. projectSelectorView.model.project
+                        .. "/readme"
+                        .. ghToken
+                )
+
+                commitsView.model.readme = fetch(readme.download_url)
             end)()
         end
     end
@@ -65,7 +79,8 @@ coroutine.wrap(function()
         target   = "#commits",
         template = "#commits-template",
         model    = Model {
-            commits = Collection {}
+            commits = Collection {},
+            readme = nil
         }
     }
 
