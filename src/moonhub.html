@@ -21,12 +21,17 @@
         }
     </style>
 
+    <script type="text/lustache" id="project-selector-template">
+        github.com/<input type="text" name="user" value="<%= user or '' %>">/<input type="text" name="project" value="<%= project or '' %>">
+        <a id="go">go</a>
+    </script>
+
     <script type="text/lustache" id="commits-template">
         <table class="commits">
             <% for i, commit in ipairs(commits) do %>
             <tr data-sha="<%= commit.commit.tree.sha %>">
                 <td class="hash"><%= string.sub(commit.commit.tree.sha, 1, 7) %></td>
-                <td class="date"><%= commit.commit.committer.date %></td>
+                <td class="date"><%= string.sub(commit.commit.committer.date, 1, 10) %></td>
                 <td class="message"><%= string.sub(commit.commit.message, 1, 80) %></td>
                 <td class="author"><%= commit.commit.committer.name %></td>
             </tr>
@@ -35,6 +40,8 @@
     </script>
 
     <div id="app">
+        <div id="project-selector"></div>
+        <div id="commits"></div>
     </div>
 
     <script src="../dist/moonhub.min.js" type="text/javascript"></script>
