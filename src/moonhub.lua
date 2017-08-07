@@ -11,13 +11,14 @@ local fetch    = helpers.fetch
 local View       = moonview.View
 local Model      = moonview.Model
 local Collection = moonview.Collection
+local Router     = moonview.Router
 
 local ghEndpoint = "https://api.github.com"
 local ghToken    = "?access_token=639ccc89c5d5b919733b25e90f3cee87a80c874d"
 
 coroutine.wrap(function()
 
-    local projectSelectorView, commitsView
+    local router, projectSelectorView, commitsView, userView, userSelectorView
 
     projectSelectorView = View {
         target   = "#project-selector",
@@ -38,11 +39,11 @@ coroutine.wrap(function()
         }
     }
 
-    projectSelectorView.update = function(self)
+    projectSelectorView.update = function(self, force)
         local nuser = q("input[name=user]").value
         local nproject = q("input[name=project]").value
 
-        if (nuser ~= self.model.user or nproject ~= self.model.project) then
+        if (nuser ~= self.model.user or nproject ~= self.model.project or force) then
             self.model.user = nuser
             self.model.project = nproject
 
@@ -84,7 +85,67 @@ coroutine.wrap(function()
         }
     }
 
-    projectSelectorView:render()
-    commitsView:render()
+    userSelectorView = View {
+        target   = "#project-selector",
+        template = "#user-selector-template",
+        model    = Model {
+            user   = nil
+        },
+        events   = {
+            ["click #go"] = function(self)
+                self:update()
+            end,
+            ["keydown input"] = function(self, _, event)
+                if (event.key == "Enter") then
+                    self:update()
+                end
+            end
+        }
+    }
+
+    userView = View {
+        target   = "#commits",
+        template = "#repos-template",
+        model = Model {
+            repos = Collection {}
+        }
+    }
+
+    userSelectorView.update = function(self, force)
+        local nuser = q("input[name=user]").value
+
+        if (nuser ~= self.model.user or force) then
+            self.model.user = nuser
+
+            coroutine.wrap(function ()
+                userView.model.repos = Collection(
+                    fetchj(
+                        ghEndpoint
+                        .. "/users/"
+                        .. userSelectorView.model.user
+                        .. "/repos"
+                        .. ghToken
+                    )
+                )
+            end)()
+        end
+    end
+
+    router = Router {
+        ["/:user"] = function(user)
+            userSelectorView.model.user = user
+
+            userSelectorView:update(true)
+        end,
+        ["/:user/:project"] = function(user, project)
+            projectSelectorView.model.user = user
+            projectSelectorView.model.project = project
+
+            projectSelectorView:update(true)
+        end
+    }
+
+    userSelectorView:render()
+    userView:render()
 
 end)()

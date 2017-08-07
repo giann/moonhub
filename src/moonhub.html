@@ -21,19 +21,19 @@
         }
     </style>
 
-    <script type="text/lustache" id="project-selector-template">
+    <script type="text/etlua" id="project-selector-template">
         github.com/<input type="text" name="user" value="<%= user or '' %>">/<input type="text" name="project" value="<%= project or '' %>">
         <a id="go">go</a>
     </script>
 
-    <script type="text/lustache" id="commits-template">
+    <script type="text/etlua" id="commits-template">
         <table class="commits">
             <% for i, commit in ipairs(commits) do %>
             <tr data-sha="<%= commit.commit.tree.sha %>">
                 <td class="hash"><%= string.sub(commit.commit.tree.sha, 1, 7) %></td>
                 <td class="date"><%= string.sub(commit.commit.committer.date, 1, 10) %></td>
                 <td class="message"><%= string.sub(commit.commit.message, 1, 80) %></td>
-                <td class="author"><%= commit.commit.committer.name %></td>
+                <td class="author"><a href="#/<%= commit.committer.login %>"><%= commit.commit.committer.name %></a></td>
             </tr>
             <% end %>
         </table>
@@ -41,6 +41,19 @@
         <div class="readme">
             <%- readme and js.global.md:toHTML(readme) or "" %>
         </div>
+    </script>
+
+    <script type="text/etlua" id="user-selector-template">
+        github.com/<input type="text" name="user" value="<%= user or '' %>">
+        <a id="go">go</a>
+    </script>
+
+    <script type="text/etlua" id="repos-template">
+        <ul class="repos">
+            <% for i, repo in ipairs(repos) do %>
+            <li><a href="#/<%= repo.full_name %>"><%= repo.name %></a></li>
+            <% end %>
+        </ul>
     </script>
 
     <div id="app">
