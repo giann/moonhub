@@ -23,6 +23,13 @@
 
     <script type="text/etlua" id="project-selector-template">
         github.com/<input type="text" name="user" value="<%= user or '' %>">/<input type="text" name="project" value="<%= project or '' %>">
+        <select name="branches">
+            <% for i, branch in ipairs(branches) do %>
+                <option <%- (currentBranch == branch.name or currentBranch == branch.commit.sha) and 'selected="true"' or '' %> value="<%= branch.commit.sha %>">
+                    <%= branch.name %> (<%= string.sub(branch.commit.sha, 1, 7)  %>)
+                </option>
+            <% end %>
+        </select>
         <a id="go">go</a>
     </script>
 

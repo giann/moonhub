@@ -1,2 +1,2 @@
 # Moonhub
-Github repo browser writtent with Moonview and Fengari
+Github repo browser written with Moonview and Fengari

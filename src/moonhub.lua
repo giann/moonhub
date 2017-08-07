@@ -25,10 +25,15 @@ coroutine.wrap(function()
         template = "#project-selector-template",
         model    = Model {
             user   = nil,
-            project = nil
+            project = nil,
+            currentBranch = "master",
+            branches = Collection {}
         },
         events   = {
             ["click #go"] = function(self)
+                self:update(true)
+            end,
+            ["change select[name=branches]"] = function(self)
                 self:update()
             end,
             ["keydown input"] = function(self, _, event)
@@ -41,33 +46,54 @@ coroutine.wrap(function()
 
     projectSelectorView.update = function(self, force)
         local nuser = q("input[name=user]").value
+        nuser = #nuser > 0 and nuser or nil
         local nproject = q("input[name=project]").value
+        nproject = #nproject > 0 and nproject or nil
+        local nbranch = q("select[name=branches]").value
+        nbranch = #nbranch > 0 and nbranch or nil
 
-        if (nuser ~= self.model.user or nproject ~= self.model.project or force) then
+        if (nuser ~= self.model.user
+            or nproject ~= self.model.project
+            or nbranch ~= self.model.currentBranch
+            or force) then
             self.model.user = nuser
             self.model.project = nproject
+            self.model.currentBranch = nbranch or "master"
 
             coroutine.wrap(function ()
+                local user = projectSelectorView.model.user
+                local project = projectSelectorView.model.project
+                local branch = projectSelectorView.model.currentBranch or "master"
+
                 commitsView.model.commits = Collection(
                     fetchj(
                         ghEndpoint
                         .. "/repos/"
-                        .. projectSelectorView.model.user
-                        .. "/"
-                        .. projectSelectorView.model.project
+                        .. user
+                        .. "/" .. project
                         .. "/commits"
                         .. ghToken
+                        .. "&sha=" .. branch
                     )
                 )
 
+                local readme
 
-                local readme = fetchj(
+                readme, self.model.branches = fetchj(
                     ghEndpoint
                         .. "/repos/"
-                        .. projectSelectorView.model.user
+                        .. user
                         .. "/"
-                        .. projectSelectorView.model.project
+                        .. project
                         .. "/readme"
+                        .. ghToken
+                        .. "&ref=" .. branch,
+                    ghEndpoint
+                        .. "/repos/"
+                        .. user
+                        .. "/"
+                        .. project
+                        .. "/branches"
                         .. ghToken
                 )
 
@@ -140,6 +166,13 @@ coroutine.wrap(function()
         ["/:user/:project"] = function(user, project)
             projectSelectorView.model.user = user
             projectSelectorView.model.project = project
+
+            projectSelectorView:update(true)
+        end,
+        ["/:user/:project/:branch"] = function(user, project, branch)
+            projectSelectorView.model.user = user
+            projectSelectorView.model.project = project
+            projectSelectorView.model.currentBranch = branch
 
             projectSelectorView:update(true)
         end
