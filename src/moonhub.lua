@@ -14,7 +14,7 @@ local Collection = moonview.Collection
 local Router     = moonview.Router
 
 local ghEndpoint = "https://api.github.com"
-local ghToken    = "?access_token=639ccc89c5d5b919733b25e90f3cee87a80c874d"
+local ghToken    = "?access_token=" .. require("moonhub.config").ghToken
 
 coroutine.wrap(function()
 
