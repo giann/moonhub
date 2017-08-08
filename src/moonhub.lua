@@ -7,6 +7,7 @@ local q        = helpers.q
 local qall     = helpers.qall
 local fetchj   = helpers.fetchj
 local fetch    = helpers.fetch
+local ornil    = helpers.ornil
 
 local View       = moonview.View
 local Model      = moonview.Model
@@ -45,12 +46,9 @@ coroutine.wrap(function()
     }
 
     projectSelectorView.update = function(self, force)
-        local nuser = q("input[name=user]").value
-        nuser = #nuser > 0 and nuser or nil
-        local nproject = q("input[name=project]").value
-        nproject = #nproject > 0 and nproject or nil
-        local nbranch = q("select[name=branches]").value
-        nbranch = #nbranch > 0 and nbranch or nil
+        local nuser = ornil(q("input[name=user]").value)
+        local nproject = ornil(q("input[name=project]").value)
+        local nbranch = ornil(q("select[name=branches]").value)
 
         if (nuser ~= self.model.user
             or nproject ~= self.model.project
